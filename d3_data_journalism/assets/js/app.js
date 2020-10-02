@@ -145,7 +145,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
     var toolTip = d3
         .tip()
         .attr("class", "tooltip")
-        .offset([90, 90])
+        .offset([80, -60])
         .html(function(data) {
             return(`<br>State Abbr: ${data.abbr}</br>`)
         });
@@ -325,7 +325,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                         .classed("inactive", false);
                 }
             })
-        });
+
     yLabelGroup.selectAll("text")
         .on("click", function() {
 
@@ -372,6 +372,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                         .classed("inactive", false);
                 }
              });
+});
 // }).catch(function(error) {
 //     console.log(error);
 // });
