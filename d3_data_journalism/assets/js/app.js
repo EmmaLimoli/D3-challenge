@@ -221,18 +221,28 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         
         // poverty x axis line income,age, poverty
     var povLabel = xLabelGroup.append("text")
-        .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        .attr("class", "axisText")
+        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+        .attr("x", 0)
+        .attr("y", 30)
+        .attr("value", "poverty")
+        .classed("active", true)
         .text("Poverty");
+
     // income variable
     var inLabel = xLabelGroup.append("text")
-        .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        .attr("class", "axisText")
+        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+        .attr("x", 0)
+        .attr("y", 50)
+        .attr("value", "age")
+        .classed("inactive", true)
         .text("Income");
     // age variable
     var ageLabel = xLabelGroup.append("text")
-        .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        .attr("class", "axisText")
+        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+        .attr("x", 0)
+        .attr("y", 70)
+        .attr("value", "income")
+        .classed("inactive", true)
         .text("Median Age");
 
         
@@ -242,10 +252,10 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     // healthcare variable, follow same as poverty  
     var heaLabel = yLabelGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -40)
+        .attr("y", -30)
         .attr("x", 0)
         .attr("value", "healthcare")
-        .classed("axisText", true)
+        // .classed("axisText", true)
         .classed("active", true)
         // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         // .attr("class", "axisText")
@@ -254,10 +264,10 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     //obesity label
     var obLabel = yLabelGroup.append("text")
         .attr("transform", "rotate(-70)")
-        .attr("y", -40)
+        .attr("y", -50)
         .attr("x", 0)
         .attr("value", "healthcare")
-        .classed("axisText", true)
+        // .classed("axisText", true)
         .classed("inactive", true)
         // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         // .attr("class", "axisText")
@@ -269,7 +279,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         .attr("y", -40)
         .attr("x", 0)
         .attr("value", "healthcare")
-        .classed("axisText", true)
+        // .classed("axisText", true)
         .classed("inactive", true)
         // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         // .attr("class", "axisText")
