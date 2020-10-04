@@ -15,8 +15,8 @@ var svgHeight = 500;
 var margin = {
     top: 20,
     right: 40,
-    bottom: 90,
-    left: 100
+    bottom: 110,
+    left: 110
 };
 
 // create width and height
@@ -51,11 +51,8 @@ function xScale(stateData, chosenXAxis) {
     return xLinearScale;
 
         // .domain([8, d3.max(stateData, d => d.smokes)])
-}        // .range([0, width]);
-// yLinearScale variable
-// var yLinearScale = d3.scaleLinear()
-//  .domain([0, d3.max(stateData, d => d.obesity)])
-//  .range([height, 0]);
+}        
+
 
 
 // function yscale
@@ -90,7 +87,7 @@ function renderYAxes(newYScale, yAxis) {
 // function for new circles in render circles for circle group call on xAxis and chosen
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     // circles
-    console.log(newYScale, chosenYAxis, chosenXAxis)
+    // console.log(newYScale, chosenYAxis, chosenXAxis)
     circlesGroup
         .transition()
         .duration(500)
@@ -273,7 +270,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     //obesity label
     var obLabel = yLabelGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", (45/100)* width - width)
+        .attr("y", (43/100)* width - width)
         .attr("x", height - (height/2))
         .attr("value", "obesity")
         .classed("inactive", true)
@@ -283,9 +280,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     // smoke variable
     var smLabel = yLabelGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", (50/100)* width - width)
+        .attr("y", (46/100)* width - width)
         .attr("x", height - (height/2))
-        .attr("value", "smoke")
+        .attr("value", "smokes")
         .classed("inactive", true)
         .classed("active", false)
         .text("Smoking");
@@ -300,7 +297,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
             
             // create conditional
             var value = d3.select(this).attr("value");
-            alert(value)
+            // alert(value)
             if (value !== chosenXAxis) {
                 chosenXAxis = value;
                 console.log(chosenXAxis)
@@ -308,6 +305,8 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                 xAxis = renderXAxes(xLinearScale, xAxis);
                 //renderCircles()
                 circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+                    // newXScale, chosenXAxis, newYScale, chosenYAxis); 
+                    
                 circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
                 // create new conditional for x axis for each label
                 if (chosenXAxis === "poverty") {
@@ -350,10 +349,10 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
             
             // create conditionals
             var value = d3.select(this).attr("value");
-            alert(value)
+            // alert(value)
             if (value !== chosenYAxis) {
                 chosenYAxis = value;
-                console.log(chosenYAxis)
+                // console.log(chosenYAxis)
                 yLinearScale = yScale(stateData, chosenYAxis);
                 yAxis = renderYAxes(yLinearScale, yAxis);
                 //renderCircles()
