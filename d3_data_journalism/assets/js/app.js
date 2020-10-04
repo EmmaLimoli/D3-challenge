@@ -90,6 +90,7 @@ function renderYAxes(newYScale, yAxis) {
 // function for new circles in render circles for circle group call on xAxis and chosen
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     // circles
+    console.log(newYScale, chosenYAxis, chosenXAxis)
     circlesGroup
         .transition()
         .duration(500)
@@ -163,6 +164,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
 // create a filepath to data.csv using d3.csv, use then function
 d3.csv("assets/data/data.csv").then(function(stateData, err) {
     console.log(stateData);
+    // will stop the loading if there's an error, can create a 404 error page. print in console that unable to load the plot
     if (err) throw err;
         // forEach loop, +measurement data
         // parse data
@@ -183,16 +185,19 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
+    
     // create chartGroup appends for xAxis
     var xAxis = chartGroup.append("g")
         .classed("x-axis", true)
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
-     // create chartGroup appends for yAxis
+     
+        // create chartGroup appends for yAxis
     var yAxis = chartGroup.append("g")
         .classed("y-axis", true)
         .call(leftAxis);
-     // create chartGroup appends for circlesGroups
+     
+        // create chartGroup appends for circlesGroups
     var circlesGroup = chartGroup.selectAll("circle")
         .data(stateData)
         .enter()
@@ -212,8 +217,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         .append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis]))
-        // .text(d => (d.abbr))
-        // .attr("class", "stateText")
+
 
     // create label appends for x axis
     var xLabelGroup = chartGroup.append("g")
@@ -226,6 +230,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         .attr("y", 30)
         .attr("value", "poverty")
         .classed("active", true)
+        .classed("inactive", false)
         .text("Poverty");
 
     // income variable
@@ -233,73 +238,77 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("x", 0)
         .attr("y", 50)
-        .attr("value", "age")
+        .attr("value", "income")
         .classed("inactive", true)
+        .classed("active", false)
         .text("Income");
-    // age variable
+    
+        // age variable
     var ageLabel = xLabelGroup.append("text")
         // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("x", 0)
         .attr("y", 70)
-        .attr("value", "income")
+        .attr("value", "age")
         .classed("inactive", true)
+        .classed("active", false)
         .text("Median Age");
 
         
     // create label appends for y axis, healthcare, obesity, healthcare
+    // use y and x and create a formula for the placement of the text for x and y axis
+    // make a bigger margin
     var yLabelGroup = chartGroup.append("g")
         .attr("transform", `translate(${width /2}, ${height + 20})`);
-    // healthcare variable, follow same as poverty  
+    
+        // healthcare variable, follow same as poverty  
     var heaLabel = yLabelGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -30)
-        .attr("x", 0)
+        .attr("y", (40/100)* width - width)
+        .attr("x", height - (height/2))
         .attr("value", "healthcare")
-        // .classed("axisText", true)
         .classed("active", true)
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        // .attr("class", "axisText")
+        .classed("inactive", false)
         .text("Healthcare");
     
     //obesity label
     var obLabel = yLabelGroup.append("text")
-        .attr("transform", "rotate(-70)")
-        .attr("y", -50)
-        .attr("x", 0)
-        .attr("value", "healthcare")
-        // .classed("axisText", true)
+        .attr("transform", "rotate(-90)")
+        .attr("y", (45/100)* width - width)
+        .attr("x", height - (height/2))
+        .attr("value", "obesity")
         .classed("inactive", true)
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        // .attr("class", "axisText")
+        .classed("active", false)
         .text("Obesity");
     
     // smoke variable
     var smLabel = yLabelGroup.append("text")
-        .attr("transform", "rotate(-50)")
-        .attr("y", -40)
-        .attr("x", 0)
-        .attr("value", "healthcare")
-        // .classed("axisText", true)
+        .attr("transform", "rotate(-90)")
+        .attr("y", (50/100)* width - width)
+        .attr("x", height - (height/2))
+        .attr("value", "smoke")
         .classed("inactive", true)
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-        // .attr("class", "axisText")
+        .classed("active", false)
         .text("Smoking");
     
     // update circlesGroups with updateToolTip 
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
 
         // events x axis
+        // labels are being incorrectly highlighted the class isn't setting correctly, look in here
     xLabelGroup.selectAll("text")
         .on("click", function() {
+            
             // create conditional
             var value = d3.select(this).attr("value");
+            alert(value)
             if (value !== chosenXAxis) {
                 chosenXAxis = value;
                 console.log(chosenXAxis)
                 xLinearScale = xScale(stateData, chosenXAxis);
                 xAxis = renderXAxes(xLinearScale, xAxis);
-                circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
-                circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+                //renderCircles()
+                circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+                circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
                 // create new conditional for x axis for each label
                 if (chosenXAxis === "poverty") {
                     povLabel
@@ -338,15 +347,18 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
     // events y axis 
     yLabelGroup.selectAll("text")
         .on("click", function() {
+            
             // create conditionals
             var value = d3.select(this).attr("value");
+            alert(value)
             if (value !== chosenYAxis) {
                 chosenYAxis = value;
                 console.log(chosenYAxis)
                 yLinearScale = yScale(stateData, chosenYAxis);
                 yAxis = renderYAxes(yLinearScale, yAxis);
-                circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis);
-                circlesGroup = updateToolTip(chosenYAxis, circlesGroup);
+                //renderCircles()
+                circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+                circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
                 // create new conditional for y axis for each label
                 if (chosenYAxis === "healthcare") {
                     heaLabel
@@ -383,8 +395,6 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                 }
              });
 });
-// }).catch(function(error) {
-//     console.log(error);
-// });
+
 
 
