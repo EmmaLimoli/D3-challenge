@@ -35,4 +35,5 @@ Lastly, for both of these groups, I created the event to change the scatterplot 
 <h2>What I Learned:</h2> 
 One area I had difficulties with were the classes. The incorrect labels were highlighted when clicked on after clicking around a few times. I tried to change the active and inactive classes, but I was unable to get the right information after clicking around the labels. Also, while coding, I found multiple elements that needed to be duplicated, which could get confusing since you had to do the same thing to the X and Y axes. Overall, I'm proud of the scatterplot since I achieved the initial project and went above and beyond to implement the animations when clicked between the labels. 
 
+<br></br>
 <strong>Tools Used: HTML, CSS, D3, and JavaScript </strong>
