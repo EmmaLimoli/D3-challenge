@@ -32,7 +32,7 @@ var svg = d3
 
 // create chartGroup, use svg.append "g" and translate
 var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // params
 var chosenXAxis = "poverty";
@@ -49,8 +49,6 @@ function xScale(stateData, chosenXAxis) {
         .range([0, width]);
 
     return xLinearScale;
-
-        // .domain([8, d3.max(stateData, d => d.smokes)])
 }        
 
 // function yscale
@@ -101,7 +99,7 @@ function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
         .duration(1000)
         .attr("x", d => newXScale(d[chosenXAxis]))
         .attr("y", d => newYScale(d[chosenYAxis]))
-        // .attr("text-anchor", "middle");
+        .attr("text-anchor", "middle");
     return textGroup;
 }
 
@@ -133,7 +131,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
         .attr("class", "tooltip")
         .offset([80, -60])
         .html(function(data) {
-            return(`<br>State Abbr: ${data.abbr}</br>`)
+            return(`<strong>State: ${data.state} </strong>`)
         });
     // call on toolTip
     circlesGroup.call(toolTip);
@@ -200,23 +198,23 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    
+      
         .attr("r", 10)
         .attr("fill", "blue")
         .attr("opacity", ".5");
 
      // create chartGroup appends for textGroup
-    var textGroup = chartGroup.selectAll("text")
+    var textGroup = chartGroup.selectAll(".stateText")
         .data(stateData)
         .enter()
         .append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
-        .attr("y", d => yLinearScale(d[chosenYAxis]))
+        .attr("y", d => yLinearScale(d[chosenYAxis]*.98))
         // code to make the state abb show up
-        // .text(data => (data.abbr))
-        // .classed("stateText", true)
-        // .attr("font-size", "10px")
-        // .attr("fill", "black")
+        .text(data => (data.abbr))
+        .classed("class","stateText")
+        .attr("font-size", "10px")
+        .attr("fill", "black")
         .attr("text-anchor", "middle");
 
 
@@ -226,7 +224,6 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
         
         // poverty x axis line income,age, poverty
     var povLabel = xLabelGroup.append("text")
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("x", 0)
         .attr("y", 30)
         .attr("value", "poverty")
@@ -236,17 +233,15 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
 
     // income variable
     var inLabel = xLabelGroup.append("text")
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("x", 0)
         .attr("y", 50)
         .attr("value", "income")
         .classed("inactive", true)
         .classed("active", false)
-        .text("Amount of Income");
+        .text("Amount of Household Income");
     
         // age variable
     var ageLabel = xLabelGroup.append("text")
-        // .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
         .attr("x", 0)
         .attr("y", 70)
         .attr("value", "age")
@@ -310,7 +305,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                 //renderCircles()
                 circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
                     // newXScale, chosenXAxis, newYScale, chosenYAxis); 
-                    
+                // add in textGroup to make state abb showup
+                textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)    
+                // create updateToolTips for circleGroups
                 circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
                 // create new conditional for x axis for each label
                 if (chosenXAxis === "poverty") {
@@ -346,8 +343,8 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                         .classed("active", true)
                         .classed("inactive", false);
                 }
-            })
-    // events y axis 
+            });
+    // events y axis, copy from x 
     yLabelGroup.selectAll("text")
         .on("click", function() {
             
@@ -361,6 +358,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, err) {
                 yAxis = renderYAxes(yLinearScale, yAxis);
                 //renderCircles()
                 circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+                // add in textGroup to make state abb showup
+                textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis)
+                // create updateToolTips for circleGroups
                 circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
                 // create new conditional for y axis for each label
                 if (chosenYAxis === "healthcare") {
